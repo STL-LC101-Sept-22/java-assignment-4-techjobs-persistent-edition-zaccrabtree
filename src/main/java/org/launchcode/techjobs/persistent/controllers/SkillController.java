@@ -23,8 +23,7 @@ public class SkillController {
     }
 
     @PostMapping("add")
-    public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill,
-                                         Errors errors, Model model) {
+    public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill, Errors errors, Model model) {
 
         if (errors.hasErrors()) {
             return "skills/add";
@@ -40,8 +39,8 @@ public class SkillController {
 
         Optional optSkill = skillRepository.findById(skillId);
         if (optSkill.isPresent()) {
-            Skill skill = (Skill) optSkill.get();
-            model.addAttribute("skill", skill);
+            Skill skills = (Skill) optSkill.get();
+            model.addAttribute("skills", skills);
             return "skills/view";
         } else {
             return "redirect:../";
@@ -50,5 +49,12 @@ public class SkillController {
 
     @Autowired
     private SkillRepository skillRepository;
+
+    @GetMapping("")
+    public String displayAllSkills(Model model) {
+        Iterable<Skill> skills = skillRepository.findAll();
+        model.addAttribute("skills", skills);
+        return "skills/index";
+    }
 
 }
