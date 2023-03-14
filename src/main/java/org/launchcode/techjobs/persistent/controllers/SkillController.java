@@ -28,7 +28,7 @@ public class SkillController {
         if (errors.hasErrors()) {
             return "skills/add";
         } else {
-            skillRepository.save(newSkill);
+            model.addAttribute("skill", skillRepository.save(newSkill));
         }
 
         return "redirect:";
@@ -51,7 +51,7 @@ public class SkillController {
     private SkillRepository skillRepository;
 
     @GetMapping("")
-    public String displayAllSkills(Model model) {
+    public String index(Model model) {
         Iterable<Skill> skills = skillRepository.findAll();
         model.addAttribute("skills", skills);
         return "skills/index";

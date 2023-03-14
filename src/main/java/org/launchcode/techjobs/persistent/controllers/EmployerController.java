@@ -30,7 +30,7 @@ public class EmployerController {
         if (errors.hasErrors()) {
             return "employers/add";
         } else {
-            employerRepository.save(newEmployer);
+            model.addAttribute("employer", employerRepository.save(newEmployer));
         }
 
         return "redirect:";
@@ -53,7 +53,7 @@ public class EmployerController {
     private EmployerRepository employerRepository;
 
     @GetMapping("")
-    public String displayAllEmployers(Model model) {
+    public String index(Model model) {
         Iterable<Employer> employers = employerRepository.findAll();
         model.addAttribute("employers", employers);
         return "employers/index";
