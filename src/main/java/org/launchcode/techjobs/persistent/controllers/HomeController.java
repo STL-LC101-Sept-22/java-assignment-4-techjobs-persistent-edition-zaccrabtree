@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Entity;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,25 +50,25 @@ public class HomeController {
     }
 
     @PostMapping("add")
-    public String processAddJobForm(@ModelAttribute @Valid Job newJob,
+    public String processAddJobForm(@ModelAttribute @Valid Job job,
                                     Errors errors, Model model, @RequestParam int employerId, @RequestParam List<Integer> skills) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
             return "add";
         } else {
-            Optional<Employer> employer = employerRepository.findById(employerId);
-            if (employer.isPresent()) {
-                newJob.setEmployer(employer.get());
-                jobRepository.save(newJob);
-                model.addAttribute("jobs", jobRepository.findAll());
-                List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
-                newJob.setSkills(skillObjs);
+
+            Employer employer = employerRepository.findById(employerId).orElse(new Employer());
+            job.setEmployer(employer);
+
+            List<Skill> skillTypes = (List<Skill>) skillRepository.findAllById(skills);
+            job.setSkills(skillTypes);
+
+            jobRepository.save(job);
             }
 
             return "redirect:";
         }
-    }
 
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
