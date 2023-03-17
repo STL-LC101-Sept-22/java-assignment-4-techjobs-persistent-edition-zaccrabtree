@@ -2,6 +2,7 @@ package org.launchcode.techjobs.persistent.controllers;
 
 import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.Job;
+import org.launchcode.techjobs.persistent.models.JobData;
 import org.launchcode.techjobs.persistent.models.Skill;
 import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
 import org.launchcode.techjobs.persistent.models.data.JobRepository;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.launchcode.techjobs.persistent.controllers.ListController.columnChoices;
+
 /**
  * Created by LaunchCode
  */
@@ -27,7 +30,7 @@ public class HomeController {
     @RequestMapping("")
     public String index(Model model) {
 
-        model.addAttribute("title", "My Jobs");
+        model.addAttribute("jobs", jobRepository.findAll());
 
         return "index";
     }
@@ -65,6 +68,7 @@ public class HomeController {
             job.setSkills(skillTypes);
 
             jobRepository.save(job);
+
             }
 
             return "redirect:";
@@ -77,12 +81,10 @@ public class HomeController {
         if (optJob.isPresent()) {
             Job job = (Job) optJob.get();
             model.addAttribute("job", job);
-            return "view/{jobId}";
+            return "view";
         } else {
-            return "redirect:../";
+            return "redirect:/";
         }
-
-
     }
 }
 
